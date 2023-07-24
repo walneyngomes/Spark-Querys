@@ -1,4 +1,5 @@
 
+
 # Import SparkSession
 from pyspark.sql import SparkSession
 df = spark.read.option("header",True) \
@@ -7,9 +8,92 @@ df.printSchema()
 df.show()
 #SELECT TODOS OS CAMPOS COM 5-TUPLAS 
 df.select("Aparencia").show(5)
+root
+ |-- Aparencia: string (nullable = true)
+ |-- Temperatura: string (nullable = true)
+ |-- Umidade: string (nullable = true)
+ |-- Vento: string (nullable = true)
+ |-- Jogar: string (nullable = true)
+
++---------+-----------+-------+----------+-----+
+|Aparencia|Temperatura|Umidade|     Vento|Jogar|
++---------+-----------+-------+----------+-----+
+|      sol|         85|     85|     FALSO|  nao|
+|      sol|         80|     90|VERDADEIRO|  nao|
+|  nublado|         83|     86|     FALSO|  sim|
+|    chuva|         70|   null|     FALSO|  sim|
+|    chuva|         68|     80|     FALSO|  sim|
+|    chuva|         65|     70|VERDADEIRO|  nao|
+|    menos|         64|     65|VERDADEIRO|  sim|
+|      sol|       1220|     95|     FALSO|  nao|
+|      sol|         69|     70|     FALSO|  sim|
+|    chuva|         75|    200|      null|  sim|
+|      sol|         75|     70|VERDADEIRO|  sim|
+|  nublado|         72|     90|VERDADEIRO|  sim|
+|  nublado|         81|     75|     FALSO|  sim|
+|    chuva|         71|     91|VERDADEIRO|  nao|
++---------+-----------+-------+----------+-----+
+
++---------+
+|Aparencia|
++---------+
+|      sol|
+|      sol|
+|  nublado|
+|    chuva|
+|    chuva|
++---------+
+only showing top 5 rows
++---------++---------++---------++---------++---------++---------++---------++---------+
 
 #SELECT TODOS OS CAMPOS COM 5-TUPLAS FILTRANDO SOMENTE O DOMINIO DE DADOS
 # Aparencia COM O CONJUNTO DE DADOS IGUAL A SOL
 df.select('*') \
   .where("Aparencia == 'sol'") \
   .show(5)
++---------+-----------+-------+----------+-----+
+|Aparencia|Temperatura|Umidade|     Vento|Jogar|
++---------+-----------+-------+----------+-----+
+|      sol|         85|     85|     FALSO|  nao|
+|      sol|         80|     90|VERDADEIRO|  nao|
+|      sol|       1220|     95|     FALSO|  nao|
+|      sol|         69|     70|     FALSO|  sim|
+|      sol|         75|     70|VERDADEIRO|  sim|
++---------+-----------+-------+----------+-----+
+]
++---------++---------++---------++---------++---------++---------++---------++---------+
++---------++---------++---------++---------++---------++---------++---------++---------+
+
+#SELECT O DOMINIO DE DADOS Umidade COM FILTRO EM TODOS OS CONJUNTO DE DADOS DO DOMINIO SOL
+#ORDENADO PELO DOMINIO DE DADOS TEMPERATURA
+df.select('Umidade') \
+  .where("Aparencia == 'sol'").orderBy('Temperatura')\
+  .show(5)
++-------+
+|Umidade|
++-------+
+|     95|
+|     70|
+|     70|
+|     90|
+|     85|
++-------+
+
++---------++---------++---------++---------++---------++---------++---------++---------+
++---------++---------++---------++---------++---------++---------++---------++---------+
++---------++---------++---------++---------++---------++---------++---------++---------+
+
+#REALIZA O AGRUPAMENTO DE DADOS E CONTA AS OCORRENCIAS
+df.groupBy('Aparencia').count().show()
++---------+-----+
+|Aparencia|count|
++---------+-----+
+|  nublado|    3|
+|    chuva|    5|
+|    menos|    1|
+|      sol|    5|
++---------+-----+
++---------++---------++---------++---------++---------++---------++---------++---------+
++---------++---------++---------++---------++---------++---------++---------++---------+
+
+df.groupBy('Aparencia').count().show()
