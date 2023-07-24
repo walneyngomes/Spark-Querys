@@ -1,0 +1,15 @@
+
+# Import SparkSession
+from pyspark.sql import SparkSession
+df = spark.read.option("header",True) \
+          .csv("tempo.csv",sep=";")
+df.printSchema()
+df.show()
+#SELECT TODOS OS CAMPOS COM 5-TUPLAS 
+df.select("Aparencia").show(5)
+
+#SELECT TODOS OS CAMPOS COM 5-TUPLAS FILTRANDO SOMENTE O DOMINIO DE DADOS
+# Aparencia COM O CONJUNTO DE DADOS IGUAL A SOL
+df.select('*') \
+  .where("Aparencia == 'sol'") \
+  .show(5)
