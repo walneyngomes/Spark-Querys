@@ -103,3 +103,4 @@ df.select('Aparencia').where("Aparencia in ('menos')").show()
 +---------+
 |    menos|
 +---------+
+df.select('*').where("Aparencia LIKE 'c%' ").show()
